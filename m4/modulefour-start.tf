@@ -7,8 +7,10 @@ variable "aws_secret_key" {}
 variable "private_key_path" {}
 variable "key_name" {}
 variable "region" {
-  default = "us-east-1"
+  default = "ap-southeast-2"
 }
+
+#2 new variables compared to m3 module
 variable "network_address_space" {
   default = "10.1.0.0/16"
 }
@@ -30,8 +32,12 @@ provider "aws" {
 # DATA
 ##################################################################################
 
+# https://www.terraform.io/docs/configuration/data-sources.html
+# A data block requests that Terraform read from a given data source ("aws_availability_zones") and export the result under the given local name ("available"). 
+# The name, "available" is used to refer to this resource from elsewhere in the same Terraform module, but has no significance outside of the scope of a module.
 data "aws_availability_zones" "available" {}
 
+# A data block to grab the most recent "aws_ami" linux OS and store it in the "aws-linux" given local name.
 data "aws_ami" "aws-linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -68,10 +74,13 @@ resource "aws_internet_gateway" "igw" {
 
 }
 
+
 resource "aws_subnet" "subnet1" {
   cidr_block              = var.subnet1_address_space
   vpc_id                  = aws_vpc.vpc.id
   map_public_ip_on_launch = "true"
+
+# refer to 'data' block and look for the local name "available". Fetch the first available aws availability zone from the available names.
   availability_zone       = data.aws_availability_zones.available.names[0]
 
 }
