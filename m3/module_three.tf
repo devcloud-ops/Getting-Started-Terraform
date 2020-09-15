@@ -7,7 +7,7 @@ variable "aws_secret_key" {}
 variable "private_key_path" {}
 variable "key_name" {}
 variable "region" {
-  default = "us-east-1"
+  default = "ap-southeast-2"
 }
 
 ##################################################################################
@@ -55,7 +55,7 @@ resource "aws_default_vpc" "default" {
 }
 
 resource "aws_security_group" "allow_ssh" {
-  name        = "nginx_demo"
+  name        = "nginx_demo1"
   description = "Allow ports for nginx demo"
   vpc_id      = aws_default_vpc.default.id
 
